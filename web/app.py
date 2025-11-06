@@ -1,0 +1,168 @@
+# app.py - Main application với Gradio UI
+import gradio as gr
+from services.ecommerce_service import ecommerce
+
+def create_app():
+    with gr.Blocks(theme=gr.themes.Soft(), title="🛍️ Mini E-commerce") as demo:
+        
+        gr.Markdown("# 🛍️ MINI E-COMMERCE SYSTEM")
+        
+        # ========== AUTHENTICATION SECTION ==========
+        with gr.Tab("🔐 Tài khoản"):
+            with gr.Row():
+                with gr.Column():
+                    gr.Markdown("### 🔑 Đăng nhập")
+                    login_username = gr.Textbox(label="Tên đăng nhập")
+                    login_password = gr.Textbox(label="Mật khẩu", type="password")
+                    login_btn = gr.Button("🚀 Đăng nhập", variant="primary")
+                    login_status = gr.Textbox(label="Trạng thái", interactive=False)
+                    
+                    current_user_display = gr.Textbox(
+                        label="👤 Người dùng hiện tại", 
+                        value="Chưa đăng nhập",
+                        interactive=False
+                    )
+                    logout_btn = gr.Button("🚪 Đăng xuất")
+                
+                with gr.Column():
+                    gr.Markdown("### 📝 Đăng ký")
+                    reg_username = gr.Textbox(label="Tên đăng nhập")
+                    reg_email = gr.Textbox(label="Email")
+                    reg_password = gr.Textbox(label="Mật khẩu", type="password")
+                    register_btn = gr.Button("✅ Đăng ký", variant="secondary")
+                    register_status = gr.Textbox(label="Trạng thái", interactive=False)
+        
+        # ========== PRODUCTS SECTION ==========
+        with gr.Tab("🛒 Sản phẩm"):
+            category_dropdown = gr.Dropdown(
+                label="🔍 Lọc theo danh mục",
+                choices=ecommerce.get_categories(),
+                value="Tất cả"
+            )
+            products_output = gr.JSON(label="📋 Sản phẩm có sẵn")
+            
+            with gr.Row():
+                product_id_input = gr.Number(label="🆔 Mã sản phẩm", precision=0)
+                quantity_input = gr.Number(label="📦 Số lượng", value=1, precision=0)
+                add_to_cart_btn = gr.Button("🎯 Thêm vào giỏ", variant="primary")
+            
+            add_to_cart_status = gr.Textbox(label="📢 Kết quả", interactive=False)
+        
+        # ========== CART SECTION ==========
+        with gr.Tab("🛍️ Giỏ hàng"):
+            cart_output = gr.JSON(label="📦 Sản phẩm trong giỏ")
+            cart_total = gr.Textbox(label="💰 Tổng tiền", interactive=False)
+            
+            with gr.Row():
+                refresh_cart_btn = gr.Button("🔄 Làm mới giỏ hàng")
+                clear_cart_btn = gr.Button("🗑️ Xóa giỏ hàng", variant="stop")
+            
+            checkout_btn = gr.Button("💳 Thanh toán", variant="primary")
+            checkout_status = gr.Textbox(label="📢 Trạng thái thanh toán", interactive=False)
+        
+        # ========== ORDERS SECTION ==========
+        with gr.Tab("📦 Đơn hàng"):
+            orders_output = gr.JSON(label="📦 Đơn hàng của bạn")
+            refresh_orders_btn = gr.Button("🔄 Làm mới danh sách")
+        
+        # ========== EVENT HANDLERS ==========
+        def handle_login(username, password):
+            result = ecommerce.login_user(username, password)
+            user_display = f"👤 {username}" if "thành công" in result else "Chưa đăng nhập"
+            return result, user_display
+        
+        def handle_logout():
+            result = ecommerce.logout_user()
+            return result, "Chưa đăng nhập"
+        
+        login_btn.click(
+            fn=handle_login,
+            inputs=[login_username, login_password],
+            outputs=[login_status, current_user_display]
+        ).then(
+            fn=lambda: ecommerce.get_products(),
+            outputs=products_output
+        )
+        
+        logout_btn.click(
+            fn=handle_logout,
+            outputs=[login_status, current_user_display]
+        ).then(
+            fn=lambda: ecommerce.get_products(),
+            outputs=products_output
+        ).then(
+            fn=lambda: ([], "0₫"),
+            outputs=[cart_output, cart_total]
+        )
+        
+        register_btn.click(
+            fn=ecommerce.register_user,
+            inputs=[reg_username, reg_email, reg_password],
+            outputs=register_status
+        )
+        
+        category_dropdown.change(
+            fn=lambda cat: ecommerce.get_products(cat),
+            inputs=category_dropdown,
+            outputs=products_output
+        )
+        
+        add_to_cart_btn.click(
+            fn=ecommerce.add_to_cart,
+            inputs=[product_id_input, quantity_input],
+            outputs=add_to_cart_status
+        )
+        
+        def display_cart():
+            cart_items = ecommerce.get_cart_items()
+            total = ecommerce.get_cart_total()
+            return cart_items, f"{total:,.0f}₫"
+        
+        refresh_cart_btn.click(
+            fn=display_cart,
+            outputs=[cart_output, cart_total]
+        )
+        
+        clear_cart_btn.click(
+            fn=ecommerce.clear_cart,
+            outputs=[checkout_status]
+        ).then(
+            fn=display_cart,
+            outputs=[cart_output, cart_total]
+        )
+        
+        checkout_btn.click(
+            fn=ecommerce.checkout,
+            outputs=checkout_status
+        ).then(
+            fn=display_cart,
+            outputs=[cart_output, cart_total]
+        )
+        
+        refresh_orders_btn.click(
+            fn=ecommerce.get_user_orders,
+            outputs=orders_output
+        )
+        
+        # Load initial data
+        demo.load(
+            fn=lambda: ecommerce.get_products(),
+            outputs=products_output
+        )
+        
+        demo.load(
+            fn=display_cart,
+            outputs=[cart_output, cart_total]
+        )
+        
+        demo.load(
+            fn=ecommerce.get_user_orders,
+            outputs=orders_output
+        )
+    
+    return demo
+
+if __name__ == "__main__":
+    print("🚀 Khởi chạy Mini E-commerce System...")
+    app = create_app()
+    app.launch(server_port=7860)
