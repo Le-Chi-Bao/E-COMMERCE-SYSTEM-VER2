@@ -32,7 +32,7 @@ class EcommerceService:
     
     # ========== PRODUCT MANAGEMENT ==========
     def get_products(self, category_filter="Tất cả"):
-        return self.product_model.get_all_products(category_filter)
+        return self.product_model.get_products(category_filter)  # ← ĐÃ SỬA THÀNH get_products
     
     def get_categories(self):
         return self.product_model.get_categories()
@@ -121,6 +121,27 @@ class EcommerceService:
         if not self.current_user:
             return []
         return self.order_model.get_user_orders(self.current_user['user_id'])
+    
+    # ========== ADMIN MANAGEMENT ==========
+    def get_all_users(self):
+        if not self.current_user or self.current_user['username'] not in ['admin', 'admin2']:
+            return []
+        return self.user_model.get_all_users()
+    
+    def get_all_products(self):
+        if not self.current_user or self.current_user['username'] not in ['admin', 'admin2']:
+            return []
+        return self.product_model.get_all_products_admin()  # ← ĐÃ SỬA THÀNH get_all_products_admin
+    
+    def get_all_orders(self):
+        if not self.current_user or self.current_user['username'] not in ['admin', 'admin2']:
+            return []
+        return self.order_model.get_all_orders()
+    
+    def get_sales_analytics(self):
+        if not self.current_user or self.current_user['username'] not in ['admin', 'admin2']:
+            return {}
+        return self.order_model.get_sales_report()
 
 # Khởi tạo service
 ecommerce = EcommerceService()

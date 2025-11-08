@@ -5,7 +5,8 @@ class ProductModel:
     def __init__(self):
         self.db = DatabaseConnection()
     
-    def get_all_products(self, category_filter="Tất cả"):
+    def get_products(self, category_filter="Tất cả"):
+        """Method cho customer - có filter category"""
         conn = self.db.get_connection()
         if conn:
             try:
@@ -29,6 +30,28 @@ class ProductModel:
                 return products
             except Exception as e:
                 print(f"❌ Lỗi lấy sản phẩm: {e}")
+                return []
+            finally:
+                cursor.close()
+                conn.close()
+        return []
+    
+    def get_all_products_admin(self):
+        """Method riêng cho Admin - lấy tất cả sản phẩm"""
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute("""
+                    SELECT p.*, c.category_name 
+                    FROM products p 
+                    JOIN categories c ON p.category_id = c.category_id
+                    ORDER BY p.product_id
+                """)
+                products = cursor.fetchall()
+                return products
+            except Exception as e:
+                print(f"❌ Lỗi lấy tất cả sản phẩm: {e}")
                 return []
             finally:
                 cursor.close()

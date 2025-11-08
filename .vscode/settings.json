@@ -1,7 +1,4 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda",
-    "python-envs.pythonProjects": [],
     "sqltools.connections": [
         {
             "mysqlOptions": {
@@ -13,9 +10,12 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "mini_ecommerce",
             "database": "mini_ecommerce",
-            "username": "root"
+            "username": "root",
+            "name": "mini_ecommerce"
         }
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": []
 }

@@ -1,4 +1,5 @@
 # models/user.py
+import mysql.connector 
 import hashlib
 from database.connection import DatabaseConnection
 
@@ -78,3 +79,22 @@ class UserModel:
                 cursor.close()
                 conn.close()
         return None
+    
+    # ========== ADMIN METHOD ==========
+    def get_all_users(self):
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute(
+                    "SELECT user_id, username, email, created_at FROM users ORDER BY created_at DESC"
+                )
+                users = cursor.fetchall()
+                return users
+            except Exception as e:
+                print(f"❌ Lỗi lấy danh sách users: {e}")
+                return []
+            finally:
+                cursor.close()
+                conn.close()
+        return []

@@ -1,6 +1,15 @@
-# app.py - Main application với Gradio UI
-import gradio as gr
+import sys
+import os
+
+# Thêm parent directory vào Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
+# Import sau khi đã thêm path
 from services.ecommerce_service import ecommerce
+import gradio as gr
 
 def create_app():
     with gr.Blocks(theme=gr.themes.Soft(), title="🛍️ Mini E-commerce") as demo:
@@ -8,7 +17,7 @@ def create_app():
         gr.Markdown("# 🛍️ MINI E-COMMERCE SYSTEM")
         
         # ========== AUTHENTICATION SECTION ==========
-        with gr.Tab("🔐 Tài khoản"):
+        with gr.Tab("🔐 Tài khoản"):    
             with gr.Row():
                 with gr.Column():
                     gr.Markdown("### 🔑 Đăng nhập")
@@ -65,20 +74,50 @@ def create_app():
             orders_output = gr.JSON(label="📦 Đơn hàng của bạn")
             refresh_orders_btn = gr.Button("🔄 Làm mới danh sách")
         
+        # ========== ADMIN DASHBOARD SECTION ==========
+        with gr.Tab("👨‍💼 Admin Dashboard"):
+            gr.Markdown("### 🛠️ Quản trị hệ thống")
+            admin_status = gr.Textbox(label="🔐 Trạng thái Admin", value="Chưa đăng nhập Admin", interactive=False)
+            
+            with gr.Row():
+                with gr.Column():
+                    gr.Markdown("#### 👥 Quản lý Người dùng")
+                    admin_users_output = gr.JSON(label="📊 Danh sách người dùng")
+                    refresh_users_btn = gr.Button("🔄 Làm mới Users")
+                
+                with gr.Column():
+                    gr.Markdown("#### 📦 Quản lý Sản phẩm")
+                    admin_products_output = gr.JSON(label="🛍️ Danh sách sản phẩm")
+                    refresh_products_btn = gr.Button("🔄 Làm mới Products")
+            
+            with gr.Row():
+                with gr.Column():
+                    gr.Markdown("#### 📋 Quản lý Đơn hàng")
+                    admin_orders_output = gr.JSON(label="📦 Tất cả đơn hàng")
+                    refresh_admin_orders_btn = gr.Button("🔄 Làm mới Orders")
+                
+                with gr.Column():
+                    gr.Markdown("#### 📈 Báo cáo & Thống kê")
+                    sales_report = gr.JSON(label="📊 Báo cáo doanh thu")
+                    generate_report_btn = gr.Button("📈 Tạo báo cáo")
+        
         # ========== EVENT HANDLERS ==========
         def handle_login(username, password):
             result = ecommerce.login_user(username, password)
             user_display = f"👤 {username}" if "thành công" in result else "Chưa đăng nhập"
-            return result, user_display
+            
+            # Cập nhật trạng thái admin
+            admin_status_value = "✅ Đã đăng nhập với quyền Admin" if username == "admin" else "👤 Đã đăng nhập User thường"
+            return result, user_display, admin_status_value
         
         def handle_logout():
             result = ecommerce.logout_user()
-            return result, "Chưa đăng nhập"
+            return result, "Chưa đăng nhập", "Chưa đăng nhập Admin"
         
         login_btn.click(
             fn=handle_login,
             inputs=[login_username, login_password],
-            outputs=[login_status, current_user_display]
+            outputs=[login_status, current_user_display, admin_status]
         ).then(
             fn=lambda: ecommerce.get_products(),
             outputs=products_output
@@ -86,7 +125,7 @@ def create_app():
         
         logout_btn.click(
             fn=handle_logout,
-            outputs=[login_status, current_user_display]
+            outputs=[login_status, current_user_display, admin_status]
         ).then(
             fn=lambda: ecommerce.get_products(),
             outputs=products_output
@@ -144,6 +183,27 @@ def create_app():
             outputs=orders_output
         )
         
+        # ========== ADMIN EVENT HANDLERS ==========
+        refresh_users_btn.click(
+            fn=ecommerce.get_all_users,
+            outputs=admin_users_output
+        )
+        
+        refresh_products_btn.click(
+            fn=ecommerce.get_all_products,
+            outputs=admin_products_output
+        )
+        
+        refresh_admin_orders_btn.click(
+            fn=ecommerce.get_all_orders,
+            outputs=admin_orders_output
+        )
+        
+        generate_report_btn.click(
+            fn=ecommerce.get_sales_analytics,
+            outputs=sales_report
+        )
+        
         # Load initial data
         demo.load(
             fn=lambda: ecommerce.get_products(),
@@ -165,4 +225,4 @@ def create_app():
 if __name__ == "__main__":
     print("🚀 Khởi chạy Mini E-commerce System...")
     app = create_app()
-    app.launch(server_port=7860)
+    app.launch(server_port=7862)

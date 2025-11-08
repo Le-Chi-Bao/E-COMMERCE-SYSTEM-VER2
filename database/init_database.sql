@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
-
+    
 -- Bảng chi tiết đơn hàng
 CREATE TABLE IF NOT EXISTS order_items (
     order_item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,7 +82,14 @@ INSERT INTO products (name, description, price, stock_quantity, category_id) VAL
 -- Tạo user mẫu (password đã được hash)
 INSERT INTO users (username, email, password) VALUES 
 ('testuser', 'test@email.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'), -- password: 123456
-('admin', 'admin@email.com', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'); -- password: admin123
+('admin', 'admin@email.com', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'), -- password: admin123
+('admin3', 'fdsdfsfsfffd', 'eebf6b39f8e34eded03033e1f51464af3d6e4477fa17d662173fceebb29f53d9');
+
+-- Thêm vào cuối file, trước các CREATE INDEX
+INSERT INTO users (username, email, password) VALUES 
+('customer1', 'customer1@email.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'), -- password: 123456
+('customer2', 'customer2@email.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'), -- password: 123456
+('admin3', 'admin3@email.com', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'); -- password: admin123
 
 -- Tạo index để tối ưu hiệu năng
 CREATE INDEX idx_user_cart ON cart(user_id);
