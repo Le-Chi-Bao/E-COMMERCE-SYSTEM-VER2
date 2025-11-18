@@ -105,30 +105,34 @@ def create_app():
         
         # ========== ADMIN DASHBOARD SECTION ==========
         with gr.Tab("Quản trị"):
-            gr.Markdown("### Quản trị hệ thống")
-            admin_status = gr.Textbox(label="Trạng thái", value="Chưa đăng nhập với quyền Admin", interactive=False)
-            
-            with gr.Row():
-                with gr.Column():
-                    gr.Markdown("#### Quản lý Người dùng")
-                    admin_users_output = gr.JSON(label="Danh sách người dùng")
-                    refresh_users_btn = gr.Button("Làm mới danh sách người dùng")
-                
-                with gr.Column():
-                    gr.Markdown("#### Quản lý Sản phẩm")
-                    admin_products_output = gr.JSON(label="Danh sách sản phẩm")
-                    refresh_products_btn = gr.Button("Làm mới danh sách sản phẩm")
-            
-            with gr.Row():
-                with gr.Column():
-                    gr.Markdown("#### Quản lý Đơn hàng")
-                    admin_orders_output = gr.JSON(label="Tất cả đơn hàng")
-                    refresh_admin_orders_btn = gr.Button("Làm mới danh sách đơn hàng")
-                
-                with gr.Column():
-                    gr.Markdown("#### Báo cáo & Thống kê")
-                    sales_report = gr.JSON(label="Báo cáo doanh thu")
-                    generate_report_btn = gr.Button("Tạo báo cáo")
+                    gr.Markdown("### 🎛️ Quản trị hệ thống")
+                    admin_status = gr.Textbox(label="Trạng thái", value="Chưa đăng nhập với quyền Admin", interactive=False)
+                    
+                    # Sử dụng Tabs để tổ chức admin section
+                    with gr.Tabs():
+                        with gr.TabItem(" Người dùng"):
+                            with gr.Column():
+                                gr.Markdown("#### Quản lý Người dùng")
+                                admin_users_output = gr.JSON(label="Danh sách người dùng")
+                                refresh_users_btn = gr.Button("Làm mới danh sách người dùng")
+                        
+                        with gr.TabItem(" Sản phẩm"):
+                            with gr.Column():
+                                gr.Markdown("#### Quản lý Sản phẩm")
+                                admin_products_output = gr.JSON(label="Danh sách sản phẩm")
+                                refresh_products_btn = gr.Button("Làm mới danh sách sản phẩm")
+                        
+                        with gr.TabItem(" Đơn hàng"):
+                            with gr.Column():
+                                gr.Markdown("#### Quản lý Đơn hàng")
+                                admin_orders_output = gr.JSON(label="Tất cả đơn hàng")
+                                refresh_admin_orders_btn = gr.Button("Làm mới danh sách đơn hàng")
+                        
+                        with gr.TabItem(" Báo cáo"):
+                            with gr.Column():
+                                gr.Markdown("#### Báo cáo & Thống kê")
+                                sales_report = gr.JSON(label="Báo cáo doanh thu")
+                                generate_report_btn = gr.Button("Tạo báo cáo")
         
         # ========== EVENT HANDLERS ==========
         def handle_login(username, password):

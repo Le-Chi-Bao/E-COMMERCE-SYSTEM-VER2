@@ -11,7 +11,7 @@ class DatabaseConnection:
             connection = mysql.connector.connect(**self.config.get_config())
             return connection
         except Exception as e:
-            print(f"❌ Lỗi kết nối MySQL: {e}")
+            print(f"Lỗi kết nối MySQL: {e}")
             return None
     
     def test_connection(self):

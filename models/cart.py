@@ -35,11 +35,11 @@ class CartModel:
                 conn.commit()
                 return True, "Thêm vào giỏ hàng thành công"
             except Exception as e:
-                return False, f"❌ Lỗi: {e}"
+                return False, f"Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, "❌ Lỗi kết nối database"
+        return False, "Lỗi kết nối database"
     
     def get_cart_items(self, user_id):
         conn = self.db.get_connection()
@@ -58,7 +58,7 @@ class CartModel:
                 cart_items = cursor.fetchall()
                 return cart_items
             except Exception as e:
-                print(f"❌ Lỗi lấy giỏ hàng: {e}")
+                print(f"Lỗi lấy giỏ hàng: {e}")
                 return []
             finally:
                 cursor.close()
@@ -83,11 +83,11 @@ class CartModel:
                 conn.commit()
                 return True, "Cập nhật giỏ hàng thành công"
             except Exception as e:
-                return False, f"❌ Lỗi: {e}"
+                return False, f" Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, "❌ Lỗi kết nối database"
+        return False, " Lỗi kết nối database"
     
     def clear_cart(self, user_id):
         conn = self.db.get_connection()
@@ -98,11 +98,11 @@ class CartModel:
                 conn.commit()
                 return True, "Đã xóa giỏ hàng"
             except Exception as e:
-                return False, f"❌ Lỗi: {e}"
+                return False, f" Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, "❌ Lỗi kết nối database"
+        return False, " Lỗi kết nối database"
     
     def get_cart_total(self, user_id):
         cart_items = self.get_cart_items(user_id)

@@ -29,7 +29,7 @@ class ProductModel:
                 products = cursor.fetchall()
                 return products
             except Exception as e:
-                print(f"❌ Lỗi lấy sản phẩm: {e}")
+                print(f" Lỗi lấy sản phẩm: {e}")
                 return []
             finally:
                 cursor.close()
@@ -51,7 +51,7 @@ class ProductModel:
                 products = cursor.fetchall()
                 return products
             except Exception as e:
-                print(f"❌ Lỗi lấy tất cả sản phẩm: {e}")
+                print(f" Lỗi lấy tất cả sản phẩm: {e}")
                 return []
             finally:
                 cursor.close()
@@ -67,7 +67,7 @@ class ProductModel:
                 product = cursor.fetchone()
                 return product
             except Exception as e:
-                print(f"❌ Lỗi lấy sản phẩm: {e}")
+                print(f" Lỗi lấy sản phẩm: {e}")
                 return None
             finally:
                 cursor.close()
@@ -83,7 +83,7 @@ class ProductModel:
                 categories = [row[0] for row in cursor.fetchall()]
                 return ["Tất cả"] + categories
             except Exception as e:
-                print(f"❌ Lỗi lấy danh mục: {e}")
+                print(f" Lỗi lấy danh mục: {e}")
                 return ["Tất cả", "Điện thoại", "Laptop", "Phụ kiện"]
             finally:
                 cursor.close()
@@ -102,7 +102,7 @@ class ProductModel:
                 conn.commit()
                 return True
             except Exception as e:
-                print(f"❌ Lỗi cập nhật tồn kho: {e}")
+                print(f" Lỗi cập nhật tồn kho: {e}")
                 return False
             finally:
                 cursor.close()

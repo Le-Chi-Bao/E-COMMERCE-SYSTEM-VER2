@@ -28,11 +28,11 @@ class OrderModel:
                 conn.commit()
                 return True, order_id, "Tạo đơn hàng thành công"
             except Exception as e:
-                return False, None, f"❌ Lỗi: {e}"
+                return False, None, f" Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, None, "❌ Lỗi kết nối database"
+        return False, None, " Lỗi kết nối database"
     
     def get_user_orders(self, user_id):
         conn = self.db.get_connection()
@@ -50,7 +50,7 @@ class OrderModel:
                 orders = cursor.fetchall()
                 return orders
             except Exception as e:
-                print(f"❌ Lỗi lấy đơn hàng: {e}")
+                print(f" Lỗi lấy đơn hàng: {e}")
                 return []
             finally:
                 cursor.close()
@@ -72,7 +72,7 @@ class OrderModel:
                 order_items = cursor.fetchall()
                 return order_items
             except Exception as e:
-                print(f"❌ Lỗi lấy chi tiết đơn hàng: {e}")
+                print(f" Lỗi lấy chi tiết đơn hàng: {e}")
                 return []
             finally:
                 cursor.close()
@@ -96,7 +96,7 @@ class OrderModel:
                 orders = cursor.fetchall()
                 return orders
             except Exception as e:
-                print(f"❌ Lỗi lấy tất cả đơn hàng: {e}")
+                print(f" Lỗi lấy tất cả đơn hàng: {e}")
                 return []
             finally:
                 cursor.close()
@@ -151,7 +151,7 @@ class OrderModel:
                 
                 return report
             except Exception as e:
-                print(f"❌ Lỗi tạo báo cáo: {e}")
+                print(f" Lỗi tạo báo cáo: {e}")
                 return {}
             finally:
                 cursor.close()

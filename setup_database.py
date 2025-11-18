@@ -5,7 +5,7 @@ from database.config import DatabaseConfig
 from database.connection import DatabaseConnection
 
 def setup_database():
-    print("🚀 Bắt đầu thiết lập database...")
+    print("Bắt đầu thiết lập database...")
     
     config = DatabaseConfig()
     
@@ -30,18 +30,18 @@ def setup_database():
         for statement in statements:
             if statement.strip():
                 cursor.execute(statement)
-                print(f"✅ Đã thực thi: {statement.strip()[:50]}...")
+                print(f" Đã thực thi: {statement.strip()[:50]}...")
         
         connection.commit()
-        print("🎉 Thiết lập database thành công!")
-        print("📊 Database: mini_ecommerce")
-        print("📋 Tables: users, products, categories, cart, orders, order_items")
-        print("👤 Tài khoản mẫu:")
+        print(" Thiết lập database thành công!")
+        print(" Database: mini_ecommerce")
+        print(" Tables: users, products, categories, cart, orders, order_items")
+        print(" Tài khoản mẫu:")
         print("   - testuser / 123456")
         print("   - admin / admin123")
         
     except Exception as e:
-        print(f"❌ Lỗi khi thiết lập database: {e}")
+        print(f" Lỗi khi thiết lập database: {e}")
     finally:
         if 'connection' in locals() and connection.is_connected():
             cursor.close()

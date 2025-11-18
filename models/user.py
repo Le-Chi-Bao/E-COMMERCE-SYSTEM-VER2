@@ -25,12 +25,12 @@ class UserModel:
                 return True, "✅ Đăng ký thành công! Hãy đăng nhập."
             except mysql.connector.Error as e:
                 if "Duplicate entry" in str(e):
-                    return False, "❌ Tên đăng nhập hoặc email đã tồn tại"
-                return False, f"❌ Lỗi: {e}"
+                    return False, " Tên đăng nhập hoặc email đã tồn tại"
+                return False, f" Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, "❌ Lỗi kết nối database"
+        return False, " Lỗi kết nối database"
     
     def login_user(self, username, password):
         conn = self.db.get_connection()
@@ -53,13 +53,13 @@ class UserModel:
                     }
                     return True, user_data, f"✅ Đăng nhập thành công! Chào mừng {user[1]}"
                 else:
-                    return False, None, "❌ Sai tên đăng nhập hoặc mật khẩu"
+                    return False, None, " Sai tên đăng nhập hoặc mật khẩu"
             except mysql.connector.Error as e:
-                return False, None, f"❌ Lỗi: {e}"
+                return False, None, f" Lỗi: {e}"
             finally:
                 cursor.close()
                 conn.close()
-        return False, None, "❌ Lỗi kết nối database"
+        return False, None, " Lỗi kết nối database"
     
     def get_user_by_id(self, user_id):
         conn = self.db.get_connection()
@@ -73,7 +73,7 @@ class UserModel:
                 user = cursor.fetchone()
                 return user
             except Exception as e:
-                print(f"❌ Lỗi lấy thông tin user: {e}")
+                print(f" Lỗi lấy thông tin user: {e}")
                 return None
             finally:
                 cursor.close()
@@ -92,7 +92,7 @@ class UserModel:
                 users = cursor.fetchall()
                 return users
             except Exception as e:
-                print(f"❌ Lỗi lấy danh sách users: {e}")
+                print(f" Lỗi lấy danh sách users: {e}")
                 return []
             finally:
                 cursor.close()
