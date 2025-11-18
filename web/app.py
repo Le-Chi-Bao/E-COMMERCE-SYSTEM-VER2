@@ -254,4 +254,8 @@ def create_app():
 if __name__ == "__main__":
     print("🚀 Khởi chạy Mini E-commerce System...")
     app = create_app()
-    app.launch(server_port=7862)
+    app.launch(
+        server_name="0.0.0.0",  
+        server_port=8866,
+        share=False
+    )
