@@ -8,11 +8,11 @@ services:
     environment:
       DB_HOST: mysql
       DB_USER: root
-      DB_PASSWORD: "120906"
+      DB_PASSWORD: "${DB_PASSWORD}"
       DB_NAME: mini_ecommerce
     # Thêm healthcheck và restart policy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7862"]
+      test: ["CMD", "curl", "-f", "http://localhost:8866"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -21,10 +21,10 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: "120906"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: mini_ecommerce
     ports:
-      - "3307:3306"
+      - "3307:3307"
     volumes:
       - mysql_data:/var/lib/mysql
 
